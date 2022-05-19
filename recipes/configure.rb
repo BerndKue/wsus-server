@@ -20,7 +20,7 @@
 # WSUS is a windows only feature
 return unless platform?('windows')
 
-include_recipe 'wsus-server::install'
+# include_recipe 'wsus-server::install'
 
 # Updates main server settings
 server_conf = node['wsus_server']['configuration']
