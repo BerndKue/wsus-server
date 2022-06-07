@@ -54,7 +54,7 @@ module WsusServer
       locate_sysnative_cmd('powershell.exe')
     end
 
-    def powershell_out64(cmd, timeout=300)
+    def powershell_out64(cmd, timeout=600)
       flags = [
         # Hides the copyright banner at startup.
         '-NoLogo',
