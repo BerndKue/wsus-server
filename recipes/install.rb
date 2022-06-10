@@ -67,7 +67,7 @@ if node['platform_version'].to_f >= 6.2
     provider       :windows_feature_powershell unless respond_to? :install_method
   end
 
-  guard_file = ::File.join(Chef::Config['file_cache_path'], 'wsus_postinstall')
+  guard_file = ::File.join(ENV['SystemRoot'], 'temp', 'wsus_postinstall')
   execute 'WSUS PostInstall' do
     command        "WsusUtil.exe PostInstall #{setup_options}"
     cwd            'C:\Program Files\Update Services\Tools'
