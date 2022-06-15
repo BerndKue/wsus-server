@@ -66,12 +66,26 @@ def compare_array_and_hash(array, hash)
   array.all? { |e| hash.keys.include?(e) || hash.values.include?(e) } if array.size == hash.size
 end
 
+def sync_running?
+  script = <<-EOS
+    $assembly = [Reflection.Assembly]::LoadWithPartialName('Microsoft.UpdateServices.Administration')
+    if ($assembly -ne $null) {
+      $wsus = [Microsoft.UpdateServices.Administration.AdminProxy]::GetUpdateServer(#{endpoint_params})
+      $sub = $wsus.GetSubscription()
+      $status = $sub.GetSynchronizationStatus()
+  EOS
+  sync_status = powershell_out64(script).stdout
+  Chef::Log.info("Sync Status: #{sync_status}")
+  return sync_status == "Running"
+
+end
+
 action :configure do
   updated_properties = diff_hash(@new_resource.properties, @current_resource.properties)
   categories_unchanged = compare_array_and_hash(@new_resource.categories, @category_map)
   classifications_unchanged = compare_array_and_hash(@new_resource.classifications, @classificiation_map)
 
-  unless updated_properties.empty? && categories_unchanged && classifications_unchanged
+  unless (updated_properties.empty? && categories_unchanged && classifications_unchanged) || sync_running?
     converge_by 'configuring wsus server subscription' do
       script = <<-EOS
         [Reflection.Assembly]::LoadWithPartialName('Microsoft.UpdateServices.Administration') | Out-Null
