@@ -72,7 +72,7 @@ def sync_running?
     if ($assembly -ne $null) {
       $wsus = [Microsoft.UpdateServices.Administration.AdminProxy]::GetUpdateServer(#{endpoint_params})
       $sub = $wsus.GetSubscription()
-      $status = $sub.GetSynchronizationStatus()
+      $sub.GetSynchronizationStatus()
     }
   EOS
   sync_status = powershell_out64(script).stdout
