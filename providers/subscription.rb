@@ -77,7 +77,7 @@ def sync_running?
   EOS
   sync_status = powershell_out64(script).stdout
   Chef::Log.info("Sync Status: #{sync_status}")
-  return sync_status.casecmp?("Running")
+  sync_status.casecmp?("Running")
 end
 
 action :configure do
