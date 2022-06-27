@@ -75,8 +75,8 @@ def sync_running?
       $sub.GetSynchronizationStatus()
     }
   EOS
-  sync_status = powershell_out64(script).stdout
-  Chef::Log.info("Sync Status: #{sync_status}")
+  sync_status = powershell_out64(script).stdout.chomp
+  Chef::Log.info("Sync Status: |#{sync_status}|")
   sync_status.casecmp?("Running")
 end
 
