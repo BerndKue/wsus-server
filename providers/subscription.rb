@@ -76,7 +76,6 @@ def sync_running?
     }
   EOS
   sync_status = powershell_out64(script).stdout.chomp
-  Chef::Log.info("Sync Status: |#{sync_status}|")
   sync_status.casecmp?("Running")
 end
 
@@ -85,7 +84,6 @@ action :configure do
   categories_unchanged = compare_array_and_hash(@new_resource.categories, @category_map)
   classifications_unchanged = compare_array_and_hash(@new_resource.classifications, @classificiation_map)
 
-  Chef::Log.info("Sync Running?: #{sync_running?}")
   unless (updated_properties.empty? && categories_unchanged && classifications_unchanged) || sync_running?
     converge_by 'configuring wsus server subscription' do
       script = <<-EOS
